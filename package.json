@@ -1,0 +1,26 @@
+{
+  "name": "webtask-filebeam",
+  "version": "0.0.1",
+  "description": "",
+  "scripts": {
+    "dev": "nodemon src/server.js"
+  },
+  "keywords": [
+    "webtask"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "bluebird": "^2.10.2",
+    "colors": "^1.1.2",
+    "gulp": "^3.8.11",
+    "gulp-run": "^1.6.11",
+    "nodemon": "^1.9.2",
+    "sandboxjs": "^1.2.2",
+    "source-map-support": "^0.2.10",
+    "webpack": "^1.7.3"
+  },
+  "dependencies": {
+    "express": "^4.12.4",
+    "webtask-tools": "^1.1.0"
+  }
+}

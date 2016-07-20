@@ -8,7 +8,7 @@ var config  = require('../config/webtask.config');
 var api     = require('./api');
 
 var app = express();
-
-app.use(config.baseUri, api);
+app.set('trust proxy', true);
+app.use(api);
 
 module.exports = Webtask.fromExpress(app);

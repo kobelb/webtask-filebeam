@@ -10,11 +10,16 @@ var app  = express();
 
 // inject context into all requests when running locally
 app.use(function (req, res, next) {
-  req.webtaskContext = {data: _.assign(config.param, config.secret, {policies: config.policies})};
+  req.webtaskContext = {data: _.assign(config.param, config.secrets, {policies: config.policies}), secrets: config.secrets};
   next();
 });
 
-app.use(config.baseUri, api);
+// no favicon at the moment
+app.use('/favicon.ico', function (req, res) {
+  res.send();
+});
+
+app.use(api);
 
 console.log('Listening on port ' + config.localPort);
 app.server = http.createServer(app);

@@ -1,8 +1,7 @@
 'use strict';
 
 module.exports = {
-  baseUri: '/api',
-  secret: {
+  secrets: {
   },
   param:  {
   }

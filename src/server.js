@@ -3,7 +3,7 @@
 var _       = require('lodash');
 var express = require('express');
 var http    = require('http');
-var config  = require('../config/api.config');
+var config  = require('../config/server.config.js');
 var api     = require('./api');
 
 var app  = express();

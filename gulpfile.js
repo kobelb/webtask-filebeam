@@ -9,11 +9,13 @@ var Promise  = require('bluebird');
 var readFile = Promise.promisify(fs.readFile);
 var colors   = require('colors/safe');
 
+const includedNodeModules = ['url-join'];
+
 // We need to exclude node_modules, otherwise webpack will bundle them
 var nodeModules = {};
 fs.readdirSync('node_modules')
   .filter(function(x) {
-    return ['.bin'].indexOf(x) === -1;
+    return [...includedNodeModules, '.bin'].indexOf(x) === -1;
   })
   .forEach(function(mod) {
     nodeModules[mod] = 'commonjs ' + mod;
@@ -37,9 +39,8 @@ function buildWebpackConfig(config) {
       __filename: true
     },
     externals:   config.externals,
-    recordsPath: config.outputFolder + '/_records',
     plugins:     [new webpack.IgnorePlugin(/\.(css|less)$/)]
-  }
+  };
 
   // This adds source-map-support in orded to enable debugging ES6 files
   if (config.sourceMap) {
@@ -56,23 +57,6 @@ function buildWebpackConfig(config) {
   return webpackConfig;
 }
 
-// This helper is used for running the api locally, with debug support
-function runApi(config) {
-  var nodemonConfig = {
-    script:  config.script,
-    env:     {'NODE_ENV': config.env || 'development'},
-    ext:     'noop'
-  };
-
-  if (config.debug) {
-    nodemonConfig.execMap = {
-      js: 'node-inspector --web-port=8484 & node --debug'
-    };
-  }
-
-  nodemon(nodemonConfig);
-}
-
 // This is the reporter used for the webpack build
 function onBuild(done) {
   return function(err, stats) {
@@ -86,78 +70,6 @@ function onBuild(done) {
   }
 }
 
-// This helper creates a webtask using sandboxjs
-function deployWebtask(deployConfig, done) {
-  var config  = require(deployConfig.config);
-
-  if (!config.webtaskName) {
-    return done(colors.white('=> ') +
-      colors.red('error deploying webtask: ') +
-      'Missing webtask name, please define the webtaskName key in ' +
-      colors.cyan(deployConfig.config));
-  }
-
-  if (!config.webtaskToken) {
-    return done(colors.white('=> ') +
-      colors.red('error deploying webtask: ') +
-      'Missing webtask token, please define the webtaskToken key in ' +
-      colors.cyan(deployConfig.config));
-  }
-
-  var profile = Sandbox.fromToken(config.webtaskToken);
-
-  readFile(deployConfig.source)
-    .then(function (code) {
-      return profile.create(code.toString(), {
-        name:    config.webtaskName,
-        secrets: config.secret || {},
-        params:  config.param || {},
-        parse:   false,
-        merge:   false
-      });
-    })
-    .then(function (webtask) {
-      console.log(colors.white(' => ') +
-        colors.green('webtask successfully deployed to: ') +
-        colors.yellow(webtask.url));
-    })
-    .then(done)
-    .catch(function (error) {
-      return done(colors.white('=> ') +
-        colors.red('error deploying webtask: ') +
-        error);
-    })
-  ;
-}
-
-// This task builds the api for running it locally
-gulp.task('build', function (done) {
-  webpack(buildWebpackConfig({
-    entry:        './src/server.js',
-    sourceMap:    true,
-    output:       'backend.js',
-    outputFolder: 'build',
-    externals:    nodeModules
-  })).run(onBuild(done));
-});
-
-// This task builds and run the api locally
-gulp.task('run', ['build'], function() {
-  runApi({
-    script: './build/backend.js',
-    env:    'development'
-  });
-});
-
-// This task builds and run the api locally in debug mode
-gulp.task('debug', ['build'], function() {
-  runApi({
-    script: './build/backend.js',
-    env:    'development',
-    debug:  true
-  });
-});
-
 // This task builds the webtask script containg the entire api in a single file
 gulp.task('buildWebtask', function (done) {
   webpack(buildWebpackConfig({
@@ -169,21 +81,3 @@ gulp.task('buildWebtask', function (done) {
   })).run(onBuild(done));
 });
 
-// This task builds the configuration file for the webtask
-gulp.task('buildWebtaskConfig', function (done) {
-  webpack(buildWebpackConfig({
-    entry:            './config/webtask.config.js',
-    output:           'webtask.config.js',
-    outputFolder:     'build',
-    externals:        nodeModules,
-    addModuleExports: true
-  })).run(onBuild(done));
-});
-
-// This task builds and creates the webtask using wt-cli
-gulp.task('wt-deploy', ['buildWebtask', 'buildWebtaskConfig'], function(done) {
-  deployWebtask({
-    source: './build/webtask.js',
-    config: './build/webtask.config.js'
-  }, done);
-});

@@ -4,8 +4,8 @@
   "description": "",
   "scripts": {
     "dev": "nodemon src/server.js",
-    "create": "wt create ./build/webtask.js --name filebeam --secret awsAccessKeyId=Whattsss --secret awsSecretAccessKey=UPPPPP",
-    "deploy": "gulp buildWebtask && wt update filebeam ./build/webtask.js"
+    "create": "wt create ./build/webtask.js --name filebeam --no-parse --no-merge",
+    "deploy": "gulp --harmony buildWebtask && wt update filebeam ./build/webtask.js"
   },
   "keywords": [
     "webtask"
@@ -25,6 +25,7 @@
   "dependencies": {
     "aws-sdk": "^2.4.7",
     "express": "^4.12.4",
+    "url-join": "^1.1.0",
     "uuid": "^2.0.2",
     "webtask-tools": "^1.1.0"
   }

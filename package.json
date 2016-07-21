@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "dev": "nodemon src/server.js",
-    "create": "wt create ./build/webtask.js --name filebeam --no-parse --no-merge",
+    "create": "gulp --harmony buildWebtask && wt create ./build/webtask.js --name filebeam --no-parse --no-merge",
     "deploy": "gulp --harmony buildWebtask && wt update filebeam ./build/webtask.js"
   },
   "keywords": [

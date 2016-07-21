@@ -5,7 +5,7 @@ POST us a file, and we'll give you a public link to download it!
 
 Example using cURL:
 
-`curl -X POST --data-binary @filename.extension https://webtask.it.auth0.com/api/run/wt-brandon_kobel-gmail_com-0/filebeam`
+`curl -X POST https://webtask.it.auth0.com/api/run/wt-brandon_kobel-gmail_com-0/filebeam --data-binary @filename.extension`
 
 
 If you forget the syntax of POSTing files using cURL, you can use the following to get a reminder

@@ -31,7 +31,7 @@ api.get('/', function (req, res) {
   res.writeLine(logo);
   res.writeLine();
   res.writeLine('Example using cURL:');
-  res.writeLine('curl -X POST --data-binary @filename.extension ' + getUrl(req));
+  res.writeLine('curl -X POST ' + getUrl(req) + ' --data-binary @filename.extension');
   res.writeLine();
   res.end();
 });

@@ -15,9 +15,6 @@ module.exports = function (req, res, next) {
     upload: function (key, stream, done) {
       var s3 = new aws.S3({params: {Bucket: bucket, Key: key}});
       s3.upload({Body: stream})
-        .on('httpUploadProgress', function (evt) {
-
-        })
         .send(function(err) {
           done(err);
       });

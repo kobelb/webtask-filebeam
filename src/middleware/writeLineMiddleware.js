@@ -8,6 +8,7 @@ module.exports = function writeLineMiddleware (req, res, next) {
   res.writeLine = function (txt) {
     txt = txt || '';
     res.write(txt + newline);
+    return res;
   };
 
   next();

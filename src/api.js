@@ -39,6 +39,11 @@ api.get('/', function (req, res) {
 api.post('/', function (req, res, next) {
   const key = uuid.v4();
 
+  if (parseInt(req.headers['content-length']) === 0) {
+    res.status(400).writeLine('This isn\'t a non-empty file').end();
+    return;
+  }
+
   req.storage.upload(key, req, function (err) {
     if (err) {
       return next(err);
@@ -54,6 +59,8 @@ api.post('/', function (req, res, next) {
 
 api.get('/:key', function (req, res, next) {
   const key = req.params.key;
+
+  // todo: don't set content-type until we actually start to get the file back
   res.set('Content-Type', 'application/octet-stream');
   req.storage.download(key)
     .on('error', function (err) {

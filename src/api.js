@@ -1,13 +1,14 @@
 'use strict';
-var express = require('express');
-var logo = require('./logo');
-var storageMiddleware = require('./middleware/storageMiddleware');
-var url = require('url');
-var urlJoin = require('url-join');
-var uuid = require('uuid');
-var writeLineMiddleware = require('./middleware/writeLineMiddleware');
 
-var api = express.Router();
+const express = require('express');
+const logo = require('./logo');
+const storageMiddleware = require('./middleware/storageMiddleware');
+const url = require('url');
+const urlJoin = require('url-join');
+const uuid = require('uuid');
+const writeLineMiddleware = require('./middleware/writeLineMiddleware');
+
+const api = express.Router();
 
 const bucket = 'filebeam';
 

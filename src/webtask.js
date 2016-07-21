@@ -1,10 +1,10 @@
 'use strict';
 
-var express = require('express');
-var Webtask = require('webtask-tools');
-var api     = require('./api');
+const express = require('express');
+const Webtask = require('webtask-tools');
+const api     = require('./api');
 
-var app = express();
+const app = express();
 app.set('trust proxy', true);
 app.use(api);
 

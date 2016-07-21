@@ -1,12 +1,12 @@
 'use strict';
 
-var _       = require('lodash');
-var express = require('express');
-var http    = require('http');
-var config  = require('../config/server.config.js');
-var api     = require('./api');
+const _       = require('lodash');
+const express = require('express');
+const http    = require('http');
+const config  = require('../config/server.config.js');
+const api     = require('./api');
 
-var app  = express();
+const app  = express();
 
 // inject context into all requests when running locally
 app.use(function (req, res, next) {

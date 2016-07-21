@@ -1,5 +1,6 @@
 'use strict';
 var express = require('express');
+var logo = require('./logo');
 var storageMiddleware = require('./middleware/storageMiddleware');
 var url = require('url');
 var urlJoin = require('url-join');
@@ -26,15 +27,17 @@ api.use(storageMiddleware);
 api.use(writeLineMiddleware);
 
 api.get('/', function (req, res) {
+  res.writeLine(logo);
   res.writeLine();
-  res.writeLine('Usage:');
-  res.writeLine('curl -X POST -d @file.ext ' + getUrl(req));
+  res.writeLine('Example using cURL:');
+  res.writeLine('curl -X POST --data-binary @filename.extension ' + getUrl(req));
   res.writeLine();
   res.end();
 });
 
 api.post('/', function (req, res, next) {
   const key = uuid.v4();
+
   req.storage.upload(key, req, function (err) {
     if (err) {
       return next(err);
@@ -50,6 +53,7 @@ api.post('/', function (req, res, next) {
 
 api.get('/:key', function (req, res, next) {
   const key = req.params.key;
+  res.set('Content-Type', 'application/octet-stream');
   req.storage.download(key)
     .on('error', function (err) {
       next(err);

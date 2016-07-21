@@ -19,7 +19,7 @@ Recently, I've found myself SSH'ed into various machines where using SCP require
 # Development
 
 ## Create webtask
-`npm run create -- --secret awsAccessKeyId="" --secret awsSecretAccessKey=""`
+`npm run create -- --secret awsAccessKeyId="" --secret awsSecretAccessKey="" --secret awsRegion="" --secret awsBucket=""`
 
 ## Deploy webtask
 `npm run deploy`

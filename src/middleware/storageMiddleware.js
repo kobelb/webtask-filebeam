@@ -1,14 +1,15 @@
 module.exports = function (req, res, next) {
   const aws = require('aws-sdk');
-  const bucket = 'filebeam';
 
   var accessKeyId = req.webtaskContext.secrets.awsAccessKeyId;
+  var bucket = req.webtaskContext.secrets.awsBucket;
   var secretAccessKey = req.webtaskContext.secrets.awsSecretAccessKey;
+  var region = req.webtaskContext.secrets.awsRegion;
 
   aws.config.update({
     accessKeyId: accessKeyId,
     secretAccessKey: secretAccessKey,
-    region: 'us-west-2'
+    region: region
   });
 
   req.storage = {
